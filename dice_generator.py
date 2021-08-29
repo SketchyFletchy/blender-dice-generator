@@ -162,6 +162,7 @@ die = {
     "icosahedron": icosahedron
 }
 
+# Make our polyhedra!
 for key, geo in die.items():
     new_mesh = bpy.data.meshes.new(f"{key}_mesh")
     new_mesh.from_pydata(vertices = geo["vertices"], edges = geo["edges"], faces = [])
@@ -172,13 +173,20 @@ for key, geo in die.items():
     for edge in bm.edges:
         edge.select=True
     bmesh.ops.edgenet_fill(bm, edges=bm.edges)
+    bm.faces.ensure_lookup_table()
+    
+    # Get face centres and normals
+    face_set = []
+    for face in bm.faces:
+        face_set.append({'center':face.calc_center_median(), 'norm': face.normal})
+    die[key].update({'faces': face_set})
     bm.to_mesh(new_mesh)
     bm.free()
     
     new_obj = bpy.data.objects.new(key, new_mesh)
     bpy.context.collection.objects.link(new_obj)
 
-#inset_dia = 25
+#print(die)
 
 
     
