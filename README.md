@@ -6,7 +6,8 @@ A set of scripts and tools for Blender to automatically generate a basic polymes
 
 Right now the scripts just generate the core set of standard die polyhedra as open meshes. Eventually I'd like to:
 - Generate face geometry reliably (just throwing fill operations at meshes is inconsistent so far)
-- Locate face centers and normals
+- Locate face centers and normals to align text to
+- Correctly scale die from unit scale definitions to inscribed/circumscribed radial size
 - Generate face text sets (in correct distributions!) with user's choice of font
 - Add blender UI to select specifics (i.e. which die are you trying to generate?)
 
