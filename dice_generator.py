@@ -1,4 +1,5 @@
 import bpy
+import bmesh
 from mathutils import *
 from math import *
 
@@ -106,7 +107,7 @@ for index, vertex in vert_set:
 dodecahedron = {"vertices": [], "edges": []}
 
 # Stealing the first 8 points because I'm lazy.
-dodecahedron["vertices"]=cube["vertices"]
+dodecahedron["vertices"]=cube["vertices"].copy()
 
 for i in [inv_gr, -inv_gr]:
     for j in [gr, -gr]:
@@ -164,6 +165,16 @@ die = {
 for key, geo in die.items():
     new_mesh = bpy.data.meshes.new(f"{key}_mesh")
     new_mesh.from_pydata(vertices = geo["vertices"], edges = geo["edges"], faces = [])
+    
+    #Construct faces in bmesh
+    bm = bmesh.new()
+    bm.from_mesh(new_mesh)
+    for edge in bm.edges:
+        edge.select=True
+    bmesh.ops.edgenet_fill(bm, edges=bm.edges)
+    bm.to_mesh(new_mesh)
+    bm.free()
+    
     new_obj = bpy.data.objects.new(key, new_mesh)
     bpy.context.collection.objects.link(new_obj)
 
